@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Car Doctor — Offline</title>
+<link rel="stylesheet" href="style.css"></head><body><main class="wrap">
+<header class="hero"><div class="hero-brand"><img class="brand-logo" src="logo.png" alt="AI Car Doctor by Bobby logo"><div class="brand-copy"><h1>AI Car Doctor</h1><p class="muted" style="margin:5px 0 0">by Bobby — Offline OBD-II code guide: possible causes, checks, repair direction and prevention.</p><span class="badge">OFFLINE • NO INTERNET REQUIRED</span></div></div></header>
+<div class="section warn"><h3>Safety and accuracy notice</h3><p>This offline guide gives possible causes, not a confirmed diagnosis. Verify codes and specifications for the exact vehicle. If brakes, steering, oil pressure, fuel leaks, overheating, or severe engine shaking occur, stop safely and get qualified help. Never work under a vehicle supported only by a jack; disconnect power or depressurize systems only using the vehicle service procedure.</p></div>
+<section class="card"><h2>Vehicle details</h2><div class="grid">
+<div class="field"><label for="make">Make</label><select id="make"><option value="">Select make</option></select></div>
+<div class="field"><label for="model">Model</label><select id="model" disabled><option value="">Select make first</option></select></div>
+<div class="field"><label for="year">Year (optional)</label><input id="year" inputmode="numeric" maxlength="4" placeholder="e.g. 2012"></div>
+<div class="field"><label for="engine">Engine (optional)</label><input id="engine" placeholder="e.g. 1.8L petrol"></div></div>
+<div class="field" style="margin-top:13px"><label for="codes">OBD-II code(s)</label><input id="codes" autocapitalize="characters" placeholder="P0301 or P0301, P0171"><p class="hint">Enter one or more codes separated by spaces or commas.</p></div>
+<div class="field" style="margin-top:12px"><label for="symptoms">Symptoms (optional)</label><textarea id="symptoms" rows="2" placeholder="e.g. shaking, weak acceleration, hard starting"></textarea></div>
+<div class="actions"><button class="primary" id="runBtn" type="button">Diagnose codes</button><button class="secondary" id="sampleBtn" type="button">Try sample P0301</button><button class="secondary" id="clearBtn" type="button">Clear</button></div><p id="status" class="hint" role="status">Ready. Enter a code and tap Diagnose codes.</p></section>
+<section class="card" id="results" aria-live="polite"><div class="reporttop"><div><h2 style="margin:0">Diagnostic report</h2><p id="vehicleSummary" class="muted small"></p></div><button class="secondary" id="copyBtn" type="button">Copy report</button></div><div id="reportContent"></div></section>
+<section class="card"><h2>Important notice</h2><p class="muted" style="margin:0">AI Car Doctor is an offline generic OBD-II reference with broad but not exhaustive code coverage. Manufacturer-specific definitions and vehicle-specific procedures may vary. Confirm diagnostic findings using vehicle service information and proper testing. A trouble code does not automatically prove that a particular component has failed.</p></section>
+<p class="muted small" style="text-align:center">AI Car Doctor • Offline reference database • <span id="dbCount"></span></p></main>
+<script src="dtc-database.js" defer></script><script src="app.js" defer></script><script src="scanner.js" defer></script></body></html>
