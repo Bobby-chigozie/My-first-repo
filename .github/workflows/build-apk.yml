@@ -16,12 +16,12 @@ jobs:
         with:
           node-version: 22
           
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
-        
-      - name: Build web app
+      - name: Install and Setup Capacitor
         run: |
+          npm install --legacy-peer-deps
+          npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
           npm run build || npx vite build || true
+          ls -la
           
       - name: Setup Java 17
         uses: actions/setup-java@v5
@@ -29,25 +29,26 @@ jobs:
           distribution: temurin
           java-version: 17
           
-      - name: Setup Android SDK and accept licenses
+      - name: Accept Android licenses
         run: |
-          sudo apt-get update
           yes | sudo sdkmanager --licenses || true
           sudo sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0" || true
-          yes | sdkmanager --licenses || true
           
-      - name: Init Capacitor and Add Android
+      - name: Create Android Project Fresh
         run: |
-          npx cap init "Bobby Car Doctor" com.bobby.cardoctor --web-dir=dist --npm-client npm || npx cap init "Bobby Car Doctor" com.bobby.cardoctor --web-dir=build --npm-client npm || true
-          npx cap add android || true
-          npx cap sync android || true
-          npx cap copy android || true
+          rm -rf android
+          npx cap init "Bobby Car Doctor" com.bobby.cardoctor --web-dir=dist --npm-client npm || npx cap init "Bobby Car Doctor" com.bobby.cardoctor --web-dir=build --npm-client npm || npx cap init "Bobby Car Doctor" com.bobby.cardoctor --web-dir=. --npm-client npm
+          npx cap add android
+          npx cap copy android
+          npx cap sync android
+          ls -la android/
+          ls -la android/app/ || true
           
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
           
       - name: Upload Bobby Car Doctor APK
         uses: actions/upload-artifact@v4
