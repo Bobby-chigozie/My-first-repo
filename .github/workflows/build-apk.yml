@@ -11,30 +11,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup Node
+      - name: Setup Node 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
         
-      - name: Build web
-        run: npm run build || npm run prod || npx vite build || true
-        
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Build web app
+        run: |
+          npm run build || npx vite build || true
+          
+      - name: Setup Java 17
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
           
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        
-      - name: Add Android platform
+      - name: Setup Android SDK and accept licenses
         run: |
+          sudo apt-get update
+          yes | sudo sdkmanager --licenses || true
+          sudo sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0" || true
+          yes | sdkmanager --licenses || true
+          
+      - name: Init Capacitor and Add Android
+        run: |
+          npx cap init "Bobby Car Doctor" com.bobby.cardoctor --web-dir=dist --npm-client npm || npx cap init "Bobby Car Doctor" com.bobby.cardoctor --web-dir=build --npm-client npm || true
           npx cap add android || true
           npx cap sync android || true
+          npx cap copy android || true
           
       - name: Build APK
         run: |
@@ -42,9 +49,8 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
           
-      - name: Upload APK
+      - name: Upload Bobby Car Doctor APK
         uses: actions/upload-artifact@v4
         with:
           name: Bobby-Car-Doctor-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
-          
